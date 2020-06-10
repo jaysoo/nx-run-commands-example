@@ -8,6 +8,21 @@
       "schematics": {},
       "architect": {
         "build": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": "apps/demo/.env",
+            "parallel": false,
+            "commands": [
+              {
+                "command": "echo Hello $NAME!"
+              },
+              {
+                "command": "nx build-app"
+              }
+            ]
+          }
+        },
+        "build-app": {
           "builder": "@nrwl/next:build",
           "options": {
             "root": "apps/demo",

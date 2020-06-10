@@ -1,76 +1,57 @@
-# Nx930Css
+# Nx run-commands example
 
-This project was generated using [Nx](https://nx.dev).
+This an example to show how to use `run-commands` to wrap existing targets in [`workspace.json`](./workspace.json).
 
-<p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png" width="450"></p>
+Try it!
 
-🔎 **Nx is a set of Extensible Dev Tools for Monorepos.**
+```
+nx build demo
+```
 
-## Adding capabilities to your workspace
+You should see `Hello Alice!` printed before the actual build starts.
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+## Some explanations
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+In the `demo` app, the original `build` target is renamed to `build-app`, and `build` uses `run-commands` to execute some arbitray commands before running `nx build-app`.
 
-Below are some plugins which you can add to your workspace:
+You can add a new target that executes shell scripts by adding to `architect` section of your project.
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+e.g.
 
-## Generate an application
+```
+"architect": {
+  "say-hello": {
+    "builder": "@nrwl/workspace:run-commands",
+    "options": {
+      "commands": [
+        {
+          "command": "echo Hello!"
+        }
+      ]
+    }
+  }
+}
+```
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+Then you can run `nx say-hello [project]` to see the result.
 
-> You can use any of the plugins above to generate applications as well.
+## Note for Nx 9.4
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+This options will be simplified in Nx 9.4, so the same example above would be as follows.
 
-## Generate a library
+```
+"architect": {
+  "say-hello": {
+    "builder": "@nrwl/workspace:run-commands",
+    "options": {
+      "command": "echo Hello!"
+    }
+  }
+}
+```
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
+And you can add new commands with a schematic in 9.4:
 
-> You can also use any of the plugins above to generate libraries as well.
-
-Libraries are sharable across libraries and applications. They can be imported from `@nx930-css/mylib`.
-
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
+```
+nx generate @nrwl/workspace:run-commands
+```
